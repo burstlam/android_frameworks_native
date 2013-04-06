@@ -1197,22 +1197,7 @@ void SurfaceFlinger::handleTransactionLocked(uint32_t transactionFlags)
                                         fbs->getBufferQueue()));
                     } else {
                         if (state.surface != NULL) {
-#ifdef QCOM_HARDWARE
-                            // to check whether virtual display is requested by
-                            // WifiDisplayAdapter
-                            char value[PROPERTY_VALUE_MAX];
-                            property_get("persist.sys.wfd.virtual", value, "0");
-                            int wfdVirtual = atoi(value);
-                            if(wfdVirtual) {
-                                // for supported (by hwc) displays we provide
-                                // our own rendering surface
-                                fbs = new FramebufferSurface(*mHwc, state.type);
-                                stc = new SurfaceTextureClient(
-                                        static_cast< sp<ISurfaceTexture> >(
-                                            fbs->getBufferQueue()));
-                            } else
-#endif
-                                stc = new SurfaceTextureClient(state.surface);
+                            stc = new SurfaceTextureClient(state.surface);
                         }
                         isSecure = state.isSecure;
                     }
@@ -1634,9 +1619,6 @@ void SurfaceFlinger::doComposeSurfaces(const sp<const DisplayDevice>& hw, const 
                         layer->draw(hw, clip);
                         break;
                     }
-                    case HWC_BLIT:
-                        //Do nothing
-                        break;
                     case HWC_FRAMEBUFFER_TARGET: {
                         // this should not happen as the iterator shouldn't
                         // let us get there.
