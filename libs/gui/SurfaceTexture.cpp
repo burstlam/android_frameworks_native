@@ -290,6 +290,14 @@ status_t SurfaceTexture::updateTexImage(BufferRejecter* rejecter, bool skipSync)
             }
         }
 
+        // when in miracast...
+        // /frameworks/av/media/libstagefright/wifi-display/sink/TunnelRenderer.cpp
+        //        mSurfaceControl = mComposerClient->createSurface( String8("A Sink Surface"),
+        if (rejecter && mName == "A Sink Surface") {
+            item.mTransform |= 0x04;
+            ST_LOGW("updateTexImage() Force Transform::ROT_90 [%d, %d]", mSlots[buf].mGraphicBuffer->getWidth(), mSlots[buf].mGraphicBuffer->getHeight());
+        }
+
         // Update the SurfaceTexture state.
         mCurrentTexture = buf;
         mCurrentTextureBuf = mSlots[buf].mGraphicBuffer;
