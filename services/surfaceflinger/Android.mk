@@ -86,6 +86,8 @@ endif
 
 LOCAL_CFLAGS += -fvisibility=hidden
 
+LOCAL_CFLAGS += -fno-strict-aliasing
+
 LOCAL_SHARED_LIBRARIES := \
 	libcutils \
 	liblog \
