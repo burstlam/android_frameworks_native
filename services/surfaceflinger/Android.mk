@@ -86,7 +86,9 @@ endif
 
 LOCAL_CFLAGS += -fvisibility=hidden
 
+ifneq ($(DEBUG_FORCE_STRICT_ALIASING),yes) 
 LOCAL_CFLAGS += -fno-strict-aliasing
+endif
 
 LOCAL_SHARED_LIBRARIES := \
 	libcutils \
