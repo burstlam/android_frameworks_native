@@ -64,11 +64,11 @@ static const bool useWaitSync = false;
 #endif
 
 // Macros for including the SurfaceTexture name in log messages
-#define ST_LOGV(x, ...) ALOGV("[%s] "x, mName.string(), ##__VA_ARGS__)
-#define ST_LOGD(x, ...) ALOGD("[%s] "x, mName.string(), ##__VA_ARGS__)
-#define ST_LOGI(x, ...) ALOGI("[%s] "x, mName.string(), ##__VA_ARGS__)
-#define ST_LOGW(x, ...) ALOGW("[%s] "x, mName.string(), ##__VA_ARGS__)
-#define ST_LOGE(x, ...) ALOGE("[%s] "x, mName.string(), ##__VA_ARGS__)
+#define ST_LOGV(x, ...) ALOGV("[%s] " x, mName.string(), ##__VA_ARGS__)
+#define ST_LOGD(x, ...) ALOGD("[%s] " x, mName.string(), ##__VA_ARGS__)
+#define ST_LOGI(x, ...) ALOGI("[%s] " x, mName.string(), ##__VA_ARGS__)
+#define ST_LOGW(x, ...) ALOGW("[%s] " x, mName.string(), ##__VA_ARGS__)
+#define ST_LOGE(x, ...) ALOGE("[%s] " x, mName.string(), ##__VA_ARGS__)
 
 namespace android {
 
@@ -316,6 +316,14 @@ status_t SurfaceTexture::updateTexImage(BufferRejecter* rejecter, bool skipSync)
                        strerror(-status), status);
                 err = status;
             }
+        }
+
+        // when in miracast...
+        // /frameworks/av/media/libstagefright/wifi-display/sink/TunnelRenderer.cpp
+        //        mSurfaceControl = mComposerClient->createSurface( String8("A Sink Surface"),
+        if (rejecter && mName == "A Sink Surface") {
+            item.mTransform |= 0x04;
+            ST_LOGW("updateTexImage() Force Transform::ROT_90 [%d, %d]", mSlots[buf].mGraphicBuffer->getWidth(), mSlots[buf].mGraphicBuffer->getHeight());
         }
 
         // Update the SurfaceTexture state.

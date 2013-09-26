@@ -656,10 +656,10 @@ status_t Parcel::writeString8(const String8& str)
 
 status_t Parcel::writeString16(const String16& str)
 {
-    return writeString16(str.string(), str.size());
+    return writeString16((uint16_t*)str.string(), str.size());
 }
 
-status_t Parcel::writeString16(const char16_t* str, size_t len)
+status_t Parcel::writeString16(const uint16_t* str, size_t len)
 {
     if (str == NULL) return writeInt32(-1);
     
@@ -1429,6 +1429,8 @@ status_t Parcel::continueWrite(size_t desired)
         if (objectsSize) {
             objects = (size_t*)malloc(objectsSize*sizeof(size_t));
             if (!objects) {
+                free(data);
+
                 mError = NO_MEMORY;
                 return NO_MEMORY;
             }
@@ -1509,7 +1511,7 @@ status_t Parcel::continueWrite(size_t desired)
             mError = NO_MEMORY;
             return NO_MEMORY;
         }
-        
+
         if(!(mDataCapacity == 0 && mObjects == NULL
              && mObjectsCapacity == 0)) {
             ALOGE("continueWrite: %d/%p/%d/%d", mDataCapacity, mObjects, mObjectsCapacity, desired);
