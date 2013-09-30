@@ -190,10 +190,7 @@ public:
     ScreenshotClient();
     ~ScreenshotClient();
 
-#ifdef TARGET_TOROPLUS_RADIO_FIX
-    // TODO: Remove me.  Do not use.
-    // This is a compatibility shim for one product whose drivers are depending on
-    // this legacy function (when they shouldn't).
+#if defined(TOROPLUS_RADIO)
     status_t update();
 #endif
 
