@@ -1102,10 +1102,10 @@ public:
     virtual void setTransform(uint32_t transform) {
         getLayer()->transform = transform;
     }
-    virtual void setFrame(const Rect& frame) {
+    virtual void __attribute__((optimize("no-strict-aliasing"))) setFrame(const Rect& frame) {
         reinterpret_cast<Rect&>(getLayer()->displayFrame) = frame;
     }
-    virtual void setCrop(const FloatRect& crop) {
+    virtual void __attribute__((optimize("no-strict-aliasing"))) setCrop(const FloatRect& crop) {
         /*
          * Since h/w composer didn't support a flot crop rect before version 1.3,
          * using integer coordinates instead produces a different output from the GL code in
