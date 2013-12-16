@@ -86,8 +86,10 @@ endif
 
 LOCAL_CFLAGS += -fvisibility=hidden
 
-ifneq ($(DEBUG_FORCE_STRICT_ALIASING),yes) 
-LOCAL_CFLAGS += -fno-strict-aliasing
+ifeq ($(TARGET_HWCOMPOSER_ALIASING_UNNECESSARY),true) 
+    LOCAL_CFLAGS += -DHWCOMPOSER_ALIASING_UNNECESSARY
+else
+    LOCAL_CFLAGS += -fno-strict-aliasing
 endif
 
 LOCAL_SHARED_LIBRARIES := \

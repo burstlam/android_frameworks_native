@@ -1102,10 +1102,12 @@ public:
     virtual void setTransform(uint32_t transform) {
         getLayer()->transform = transform;
     }
-    virtual void __attribute__((optimize("no-strict-aliasing"))) setFrame(const Rect& frame) {
+    virtual void setFrame(const Rect& frame) {
+    #ifndef HWCOMPOSER_ALIASING_UNNECESSARY
         reinterpret_cast<Rect&>(getLayer()->displayFrame) = frame;
+    #endif
     }
-    virtual void __attribute__((optimize("no-strict-aliasing"))) setCrop(const FloatRect& crop) {
+    virtual void setCrop(const FloatRect& crop) {
         /*
          * Since h/w composer didn't support a flot crop rect before version 1.3,
          * using integer coordinates instead produces a different output from the GL code in
@@ -1113,11 +1115,13 @@ public:
          * window size ratio is large and a window crop is defined
          * (i.e.: if we scale the buffer a lot and we also crop it with a window crop).
          */
+    #ifndef HWCOMPOSER_ALIASING_UNNECESSARY
         hwc_rect_t& r = getLayer()->sourceCrop;
         r.left  = int(ceilf(crop.left));
         r.top   = int(ceilf(crop.top));
         r.right = int(floorf(crop.right));
         r.bottom= int(floorf(crop.bottom));
+    #endif
     }
     virtual void setVisibleRegionScreen(const Region& reg) {
         // Region::getSharedBuffer creates a reference to the underlying
